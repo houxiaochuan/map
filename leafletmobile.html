@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>start leaflet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+<style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      html, body, #map {
+        height: 100vh;
+        width: 100vw;
+      }
+</style>
+</head>
+<body>
+	<div id="map"></div>
+	<script>
+    // 初始化地图，设置地图坐标及缩放级别
+    // var map = L.map('map').setView([51.505, -0.09], 13);
+    var map = L.map('map').fitWorld();
+
+    //添加瓦片层（tile layer）(tile,意为瓷砖 瓦片，就像在地板上面铺了一层瓷砖)
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+   // 当用户允许分享位置时，浏览器将将检测位置，地图将显示到对应位置（set the view）
+    map.locate({setView: true, maxZoom: 16});
+
+    //定位成功时，在定位出展示标注
+    function onLocationFound(e) {
+        var radius = e.accuracy / 2;
+
+        L.marker(e.latlng).addTo(map)
+            .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+        L.circle(e.latlng, radius).addTo(map);
+    }
+
+   //在地图中绑定定位成功时的事件
+    map.on('locationfound', onLocationFound);
+
+    //定位失败时的错误显示
+    function onLocationError(e) {
+        alert(e.message);
+    }
+
+    map.on('locationerror', onLocationError);
+
+	</script>
+</body>
+</html>
