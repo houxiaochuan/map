@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>start leaflet</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+<style>
+  #map { height: 600px; }
+</style>
+</head>
+<body>
+	<div id="map"></div>
+	<script>
+   // 1 初始化地图，设置地图坐标及缩放级别
+    var map = L.map('map').setView([51.505, -0.09], 13);
+
+    //2 添加瓦片层（tile layer）(tile,意为瓷砖 瓦片，就像在地板上面铺了一层瓷砖)
+    //这里引用osm的在线地图
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    //3  添加标注、圆形、多边形
+    // 添加标注（marker）
+    var marker = L.marker([51.5, -0.09]).addTo(map);
+
+    // 添加圆形
+    var circle = L.circle([51.508, -0.11], {
+       color: 'red',
+       fillColor: '#f03',
+       fillOpacity: 0.5,
+       radius: 500
+    }).addTo(map);
+
+    // 添加多边形(ploygon)
+    var polygon = L.polygon([
+      [51.509, -0.08],
+      [51.503, -0.06],
+      [51.51, -0.047]
+    ]).addTo(map);
+
+//4 为覆盖物标注、圆、多边形添加弹出气泡(popups)
+    marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    circle.bindPopup("I am a circle.");
+    polygon.bindPopup("I am a polygon.");
+    //首先使用bindPopup将要显示的信息内容绑定在图形上，使用openPopup()显示出气泡
+
+    //或者你也可以直接使用popups将气泡作为一个层
+    // var popup = L.popup()
+                // .setLatLng([51.5, -0.09])
+                // .setContent("I am a standalone popup.")
+                // .openOn(map);
+
+// 5 处理事件
+    var popup = L.popup();
+
+    function onMapClick(e) {
+        popup
+            .setLatLng(e.latlng)
+            .setContent("You clicked the map at " + e.latlng.toString())
+            .openOn(map);
+    }
+
+    map.on('click', onMapClick);
+	</script>
+</body>
+</html>
